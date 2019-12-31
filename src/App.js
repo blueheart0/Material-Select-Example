@@ -13,11 +13,11 @@ const App = props => {
   const singleMenuButtonRef = useRef();
   const handleClose = event => {
     console.log(event);
-    setOpen(null);
+    setOpen(false);
   };
 
   const handleOpen = () => {
-    setOpen(singleMenuButtonRef.current);
+    setOpen(true);
   };
   const handleCloseMulti = () => {
     setOpenMulti(false);
@@ -33,7 +33,7 @@ const App = props => {
       </Button>
       <CCMenu
         open={Boolean(open)}
-        anchorEl={singleMenuButtonRef.current}
+        anchorEl={singleMenuButtonRef}
         onClose={handleClose}
         value={"예약수정"}
         menuItem={[
