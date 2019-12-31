@@ -1,5 +1,4 @@
 import { makeStyles, MenuList, Popover } from "@material-ui/core";
-import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import clsx from "clsx";
 import PropTypes from "prop-types";
 import React, { forwardRef } from "react";
@@ -28,33 +27,33 @@ const useStyle = makeStyles(
 );
 
 const CCMenu = forwardRef((props, ref) => {
-  const { onClose, open, menuItem, value, anchorEl, MenuListProps } = props;
+  const { onClose, open, menuItem, anchorEl, MenuListProps } = props;
   const classes = useStyle();
 
   return (
-    <Popover open={open} anchorEl={anchorEl.current}>
-      <ClickAwayListener onClickAway={onClose}>
-        <MenuList ref={ref} className={clsx(classes.menu)} {...MenuListProps}>
-          {menuItem &&
-            menuItem.length &&
-            menuItem.map(item => {
-              return (
-                <CCMenuItem
-                  onClick={onClose}
-                  key={item.value}
-                  className={clsx(classes.font__size, classes.gutters)}
-                  disableGutters={true}
-                  value={item.value}
-                  color={item.color ? item.color : ""}
-                  disabled={item.disable ? item.disable : false}
-                  selected={item.value === value}
-                >
-                  {item.text || item.value}
-                </CCMenuItem>
-              );
-            })}
-        </MenuList>
-      </ClickAwayListener>
+    <Popover open={open} anchorEl={anchorEl.current} onClose={onClose}>
+      <MenuList ref={ref} className={clsx(classes.menu)} {...MenuListProps}>
+        {menuItem &&
+          menuItem.length &&
+          menuItem.map(item => {
+            return (
+              <CCMenuItem
+                onClick={event => {
+                  item.onClick(event);
+                  onClose(event);
+                }}
+                key={item.value}
+                className={clsx(classes.font__size, classes.gutters)}
+                disableGutters={true}
+                value={item.value}
+                color={item.color ? item.color : ""}
+                disabled={item.disabled ? item.disabled : false}
+              >
+                {item.label || item.value}
+              </CCMenuItem>
+            );
+          })}
+      </MenuList>
     </Popover>
   );
 });
@@ -63,12 +62,13 @@ CCMenu.propTypes = {
   anchorEl: PropTypes.object.isRequired,
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  value: PropTypes.string,
   menuItem: PropTypes.arrayOf(
     PropTypes.shape({
       value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
         .isRequired,
-      text: PropTypes.string
+      label: PropTypes.string,
+      color: PropTypes.string,
+      onClick: PropTypes.func.isRequired
     })
   )
 };

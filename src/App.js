@@ -4,14 +4,16 @@ import { ThemeProvider } from "@material-ui/styles";
 import React, { useContext, useRef, useState } from "react";
 import "./App.css";
 import CCMenu from "./Component/Menu";
-import CCMultiSelect from "./Component/MultiSelectBox";
+import CCMultiMenu from "./Component/MultiMenu";
 import { AppContext } from "./Context/AppContext";
 
 const App = props => {
   const [open, setOpen] = useState(false);
   const [openMulti, setOpenMulti] = useState(false);
+  const [selectedItem, setSelectedItem] = useState([]);
   const singleMenuButtonRef = useRef();
-  const handleClose = event => {
+  const multiMenuButtonRef = useRef();
+  const onClose = event => {
     console.log(event);
     setOpen(false);
   };
@@ -24,7 +26,7 @@ const App = props => {
   };
 
   const handleOpenMulti = () => {
-    setOpenMulti(true);
+    setOpenMulti(!openMulti);
   };
   return (
     <div className="App">
@@ -34,55 +36,75 @@ const App = props => {
       <CCMenu
         open={Boolean(open)}
         anchorEl={singleMenuButtonRef}
-        onClose={handleClose}
-        value={"예약수정"}
+        onClose={onClose}
         menuItem={[
           {
-            value: "새 예약",
-            disable: true
+            value: "1",
+            label: "새 예약",
+            disabled: true,
+            onClick: console.log
           },
           {
-            value: "예약수정"
+            value: "2",
+            label: "예약수정",
+            onClick: console.log
           },
           {
-            value: "예약이행"
+            value: "3",
+            label: "예약이행",
+            onClick: console.log
           },
           {
-            value: "바로접수",
-            color: "#0097a7"
+            value: "4",
+            label: "바로접수",
+            color: "#0097a7",
+            onClick: console.log
           },
           {
-            value: "예약내역"
+            value: "5",
+            label: "예약내역",
+            onClick: console.log
           },
           {
-            value: "예약삭제",
-            color: "#f63b7c"
+            value: "6",
+            label: "예약삭제",
+            color: "#f63b7c",
+            onClick: console.log
           }
         ]}
       />
-      <Button onClick={handleOpenMulti}>MULTI SELECT</Button>
-      <CCMultiSelect
-        labelId={"demo-multi-select-label"}
+      <Button ref={multiMenuButtonRef} onClick={handleOpenMulti}>
+        MULTI SELECT
+      </Button>
+      <CCMultiMenu
+        anchorEl={multiMenuButtonRef}
         open={openMulti}
-        onChange={console.log}
+        value={selectedItem}
+        onChange={event => {
+          setSelectedItem(event);
+        }}
         onClose={handleCloseMulti}
-        onOpen={handleOpenMulti}
         menuItem={[
           {
-            value: "의사01"
+            value: "a",
+            label: "의사01"
           },
           {
-            value: "의사02",
-            disable: true
+            value: "b",
+            label: "의사02",
+            disabled: true
           },
           {
-            value: "의사03"
+            value: "c",
+            label: "의사03"
           },
           {
-            value: "의사04"
+            value: "d",
+            label: "의사04"
           },
           {
-            value: "의사05"
+            value: "e",
+            label: "의사05"
           }
         ]}
       />
