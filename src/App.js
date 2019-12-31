@@ -1,22 +1,23 @@
 import { createMuiTheme } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import { ThemeProvider } from "@material-ui/styles";
-import React, { useContext, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import "./App.css";
+import CCMenu from "./Component/Menu";
 import CCMultiSelect from "./Component/MultiSelectBox";
-import CCSelect from "./Component/SelectBox";
 import { AppContext } from "./Context/AppContext";
 
 const App = props => {
   const [open, setOpen] = useState(false);
-  const [openMulti, setOpenMulti] = useState(true);
-  // console.log(props);
-  const handleClose = () => {
-    setOpen(false);
+  const [openMulti, setOpenMulti] = useState(false);
+  const singleMenuButtonRef = useRef();
+  const handleClose = event => {
+    console.log(event);
+    setOpen(null);
   };
 
   const handleOpen = () => {
-    setOpen(true);
+    setOpen(singleMenuButtonRef.current);
   };
   const handleCloseMulti = () => {
     setOpenMulti(false);
@@ -27,28 +28,35 @@ const App = props => {
   };
   return (
     <div className="App">
-      <Button onClick={handleOpen}>SINGLE SELECT</Button>
-      <CCSelect
-        labelId={"demo-simple-select-label"}
-        hasNone={"TEST"}
-        open={open}
-        onChange={console.log}
+      <Button ref={singleMenuButtonRef} onClick={handleOpen}>
+        SINGLE SELECT
+      </Button>
+      <CCMenu
+        open={Boolean(open)}
+        anchorEl={singleMenuButtonRef.current}
         onClose={handleClose}
-        onOpen={handleOpen}
+        value={"예약수정"}
         menuItem={[
+          {
+            value: "새 예약",
+            disable: true
+          },
           {
             value: "예약수정"
           },
           {
-            value: "횐자선택",
-            disable: true
+            value: "예약이행"
           },
           {
-            value: "바로접수"
-          },
-          {
-            value: "예약내역",
+            value: "바로접수",
             color: "#0097a7"
+          },
+          {
+            value: "예약내역"
+          },
+          {
+            value: "예약삭제",
+            color: "#f63b7c"
           }
         ]}
       />
